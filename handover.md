@@ -18,6 +18,21 @@ ARESTERdev bukan sekadar katalog bot Telegram.
 - Vercel: website dan admin panel
 - Target biaya: Rp0 / free-first
 
+## HOSTDDNS PYTHON DEPLOYMENT
+
+Python yang tersedia pada setup Python App HostDDNS:
+
+- Python 3.11.9 — pilihan utama untuk bot baru jika kompatibel
+- Python 3.7.17 — fallback untuk dependency/library lama
+- Python 2.7.18 — hanya untuk kebutuhan legacy tertentu
+
+Aturan pemilihan:
+1. Utamakan Python 3.11.9.
+2. Gunakan Python 3.7.17 jika dependency yang diperlukan tidak kompatibel dengan 3.11.9.
+3. Gunakan Python 2.7.18 hanya jika aplikasi benar-benar membutuhkan Python 2.
+4. Sebelum deployment, dependency harus diuji terhadap versi Python yang dipilih.
+5. Versi Python deployment harus dicatat di dokumentasi project.
+
 ## ATURAN DEVELOPMENT
 Proyek dibuat stage by stage.
 
