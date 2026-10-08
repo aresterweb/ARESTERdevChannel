@@ -1,120 +1,230 @@
 # ARESTERdev — PROJECT HANDOVER
 
-> Dokumen ini adalah sumber konteks utama untuk melanjutkan proyek ARESTERdev jika sesi/chat sebelumnya berakhir, kuota habis, atau pekerjaan dilanjutkan oleh GPT lain.
->
-> **ATURAN UTAMA: Baca file ini terlebih dahulu sebelum melakukan perubahan apa pun pada proyek.**
+## IDENTITAS PROYEK
+- Brand: ARESTERdev
+- Telegram Channel: https://t.me/ARESTERdevHub
+- GitHub: https://github.com/aresterweb/ARESTERdevChannel.git
+- Local Repository: ~/ARESTERdevChannel
 
----
+## TUJUAN
+ARESTERdev adalah ekosistem teknologi yang mencakup Telegram, Telegram bots, AI, coding/development, Android, Termux, web development, free tools, experimental projects, media, community, requests, project updates, affiliate, sponsor, dan monetization.
 
-# 1. IDENTITAS PROYEK
+ARESTERdev bukan sekadar katalog bot Telegram.
 
-## Nama Brand
+## INFRASTRUKTUR
+- Termux: development dari HP
+- GitHub: source code, version control, dokumentasi
+- HostDDNS: deployment Telegram bots
+- Vercel: website dan admin panel
+- Target biaya: Rp0 / free-first
 
-**ARESTERdev**
+## ATURAN DEVELOPMENT
+Proyek dibuat stage by stage.
 
-> Penulisan brand harus selalu persis:
->
-> `ARESTERdev`
->
-> Jangan menggunakan:
-> - ARESTERDev
-> - ArestarDev
-> - ARESTERDEV
-> - ARESTERdevHub sebagai nama brand
+Setiap pekerjaan wajib:
+1. Dibuat
+2. Diuji
+3. Diverifikasi
+4. Dicatat di handover.md
+5. Di-commit
+6. Di-push ke GitHub
 
-`ARESTERdevHub` adalah username/channel Telegram, bukan nama brand utama.
+SETIAP KALI MEMBUAT, MENGUBAH, MEMPERBAIKI, MENGHAPUS, ATAU MENYELESAIKAN SESUATU, HANDOVER.MD WAJIB DIPERBARUI DAN IKUT DI-PUSH KE GITHUB.
 
-## Konsep
+## TAHAPAN PROYEK
 
-ARESTERdev sedang dibangun sebagai ekosistem teknologi yang mencakup:
+### Stage 1 — Foundation
+Status: BERLANGSUNG
 
-- Telegram
-- Telegram bots
-- AI
-- coding/development
-- Android & Termux
-- web development
-- tools gratis
-- experimental projects
-- project/lab
-- komunitas
-- media/informasi teknologi
-- request dari pengguna
-- polling dan interaksi komunitas
-- project updates
-- peluang monetisasi yang legal
+- [x] GitHub repository dibuat
+- [x] Repository di-clone ke Termux
+- [x] Branch main
+- [x] Folder web dibuat
+- [x] Folder bot dibuat
+- [x] Folder admin dibuat
+- [x] Folder docs dibuat
+- [x] .gitkeep dibuat
+- [x] README.md dibuat
+- [x] .gitignore dibuat
+- [x] LICENSE dibuat
+- [x] handover.md dibuat
+- [x] Initial commit dibuat
+- [ ] Initial push diverifikasi
+- [ ] Repository GitHub diverifikasi
 
-**Catatan penting:**
+### Stage 2 — Telegram Channel & Identity
+Status: SEBAGIAN BESAR SELESAI
 
-ARESTERdev BUKAN sekadar katalog bot Telegram.
+- [x] Channel dibuat
+- [x] Username @ARESTERdevHub
+- [x] Identity dasar
+- [ ] Integrasi bot
 
-Bot hanya merupakan salah satu bagian dari ekosistem.
+### Stage 3 — Telegram Admin Bot
+Status: BELUM DIMULAI
+Deployment: HostDDNS
 
----
+### Stage 4 — Public Website
+Status: BELUM DIMULAI
+Deployment: Vercel
 
-# 2. TUJUAN BESAR PROYEK
+### Stage 5 — Private Admin Panel
+Status: BELUM DIMULAI
+Akses: owner/admin
 
-Tujuan utama adalah membangun ekosistem ARESTERdev yang dapat berkembang menjadi:
+### Stage 6 — Database & Analytics
+Status: BELUM DIMULAI
 
-1. Telegram Channel
-2. Telegram Bot
-3. Website publik
-4. Admin panel privat
-5. Sistem manajemen konten
-6. Katalog bot/tools/project
-7. Request center
-8. Community features
-9. Analytics
-10. Monetization system
+### Stage 7 — Bot / Tool / Project Catalog
+Status: BELUM DIMULAI
 
-Sistem akan dikembangkan secara bertahap.
+### Stage 8 — Community & Requests
+Status: BELUM DIMULAI
 
-Jangan mencoba membangun seluruh sistem sekaligus.
+### Stage 9 — Monetization
+Status: BELUM DIMULAI
 
----
+### Stage 10 — Security & Optimization
+Status: BELUM DIMULAI
 
-# 3. TARGET BIAYA
+## STRUKTUR PROJECT
 
-Target proyek:
+ARESTERdevChannel/
+├── .git/
+├── .gitignore
+├── LICENSE
+├── README.md
+├── handover.md
+├── admin/
+│   └── .gitkeep
+├── bot/
+│   └── .gitkeep
+├── docs/
+│   └── .gitkeep
+└── web/
+    └── .gitkeep
 
-**Rp0 / sebisa mungkin menggunakan layanan gratis.**
+## PEKERJAAN YANG SUDAH DILAKUKAN
 
-Prioritas penggunaan:
+1. Repository GitHub ARESTERdevChannel dibuat.
+2. Repository berhasil di-clone ke Termux.
+3. Local repository berada di ~/ARESTERdevChannel.
+4. Branch main digunakan.
+5. Folder web dibuat.
+6. Folder bot dibuat.
+7. Folder admin dibuat.
+8. Folder docs dibuat.
+9. .gitkeep dibuat pada seluruh folder.
+10. README.md dibuat.
+11. Branding dikoreksi menjadi ARESTERdev.
+12. .gitignore dibuat.
+13. LICENSE dibuat.
+14. handover.md dibuat.
+15. Semua foundation ditambahkan menggunakan git add .
+16. Initial commit dibuat.
 
-- GitHub Free
-- Termux
-- Telegram
-- HostDDNS
-- Vercel Free Tier
-- layanan gratis lainnya jika memang diperlukan
+## INITIAL COMMIT
 
-Jangan mengasumsikan pengguna memiliki budget untuk server atau layanan berbayar.
+Commit ID:
+4ad88bb
 
-Jika suatu fitur membutuhkan biaya, jelaskan alternatif gratis terlebih dahulu.
+Commit message:
+chore: initialize ARESTERdev project
 
----
+## FILE FOUNDATION
 
-# 4. INFRASTRUKTUR
+README.md
+- Informasi dasar ARESTERdev
+- Ecosystem
+- Project structure
+- Status
 
-## GitHub
+.gitignore
+- Python cache
+- Virtual environment
+- Environment variables
+- Secrets
+- Node modules
+- Vercel
+- Database lokal
+- Logs
+- OS/editor files
 
-Repository:
+LICENSE
+- Copyright (c) 2026 ARESTERdev
+- All rights reserved.
 
-https://github.com/aresterweb/ARESTERdevChannel.git
+handover.md
+- Dokumentasi utama
+- Konteks project
+- Status
+- Riwayat pekerjaan
+- Next step
+- Instruksi handover
 
-Repository digunakan sebagai:
+## SECURITY
 
-- source code
-- version control
-- dokumentasi
-- project structure
-- deployment source jika diperlukan
+Jangan commit:
+.env
+BOT_TOKEN
+API_KEY
+PASSWORD
+PRIVATE_KEY
+SESSION_TOKEN
+DATABASE_PASSWORD
 
-## Termux
+Gunakan environment variables.
 
-Development dilakukan langsung dari HP menggunakan Termux.
+## ATURAN BRANDING
 
-Local repository:
+Nama brand harus selalu:
 
-```text
-~/ARESTERdevChannel
+ARESTERdev
+
+Telegram:
+
+@ARESTERdevHub
+
+Jangan mengganti ARESTERdev menjadi ARESTERDev.
+
+## ATURAN GPT BERIKUTNYA
+
+GPT yang melanjutkan project WAJIB membaca handover.md terlebih dahulu.
+
+Jangan mengulang pekerjaan yang sudah selesai.
+
+Jangan melompat tahap.
+
+Verifikasi kondisi repository sebelum menganggap sesuatu selesai.
+
+Jika membuat perubahan:
+1. Implementasi
+2. Testing
+3. Update handover.md
+4. git add
+5. git commit
+6. git push
+
+## CURRENT STATUS
+
+PROJECT: ARESTERdev
+STAGE: Stage 1 — Foundation
+LOCAL: ~/ARESTERdevChannel
+BRANCH: main
+INITIAL COMMIT: 4ad88bb
+INITIAL PUSH: BELUM DIVERIFIKASI
+TELEGRAM: @ARESTERdevHub
+BOT HOST: HostDDNS
+WEB HOST: Vercel
+BUDGET: Rp0 / free-first
+
+## NEXT STEP
+
+1. Commit handover.md versi terbaru.
+2. Push ke GitHub.
+3. Verifikasi GitHub.
+4. Update handover.md bahwa push berhasil.
+5. Commit dan push update handover.
+6. Setelah Stage 1 selesai, lanjut ke tahap berikutnya.
+
+# END OF HANDOVER
