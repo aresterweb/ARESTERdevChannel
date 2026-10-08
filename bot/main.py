@@ -1,5 +1,6 @@
 import os
 import logging
+import asyncio
 
 from dotenv import load_dotenv
 from telegram import Update
@@ -27,22 +28,18 @@ logging.basicConfig(
     level=logging.INFO,
 )
 
-logger = logging.getLogger(__name__)
+logger = logging.getLogger("ARESTERdev")
 
 
 def is_owner(update: Update) -> bool:
     user = update.effective_user
-
-    if not user:
-        return False
-
-    return user.id == OWNER_ID
+    return bool(user and user.id == OWNER_ID)
 
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user = update.effective_user
 
-    if not user:
+    if not user or not update.message:
         return
 
     if not is_owner(update):
@@ -62,10 +59,11 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 
 async def admin(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    if not update.message:
+        return
+
     if not is_owner(update):
-        await update.message.reply_text(
-            "⛔ Akses ditolak."
-        )
+        await update.message.reply_text("⛔ Akses ditolak.")
         return
 
     await update.message.reply_text(
@@ -76,7 +74,7 @@ async def admin(update: Update, context: ContextTypes.DEFAULT_TYPE):
     )
 
 
-def main():
+def build_application():
     request = HTTPXRequest(
         connect_timeout=30.0,
         read_timeout=30.0,
@@ -95,9 +93,25 @@ def main():
     app.add_handler(CommandHandler("start", start))
     app.add_handler(CommandHandler("admin", admin))
 
-    logger.info("ARESTERdev Admin Bot starting...")
-    app.run_polling(bootstrap_retries=-1)
+    return app
+
+
+def run_bot():
+    loop = asyncio.new_event_loop()
+    asyncio.set_event_loop(loop)
+
+    try:
+        logger.info("ARESTERdev Admin Bot starting...")
+        build_application().run_polling(
+            bootstrap_retries=-1,
+            drop_pending_updates=True,
+        )
+    finally:
+        try:
+            loop.close()
+        except Exception:
+            pass
 
 
 if __name__ == "__main__":
-    main()
+    run_bot()

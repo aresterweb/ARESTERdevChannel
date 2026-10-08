@@ -1,14 +1,17 @@
 # ARESTERdev Admin Bot
 
-Telegram admin bot untuk ekosistem ARESTERdev.
+Target runtime: HostDDNS Python 3.11.9.
 
-## Development
+Startup:
+- passenger_wsgi.py
+- application
 
-Python utama HostDDNS:
-- Python 3.11.9
+Environment:
+- BOT_TOKEN
+- OWNER_ID
 
-Dependency:
-- python-telegram-bot
-- python-dotenv
+Commands:
+- /start
+- /admin
 
-Token bot disimpan di `.env` dan tidak boleh di-commit.
+Do not upload .env.

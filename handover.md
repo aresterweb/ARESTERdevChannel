@@ -363,3 +363,13 @@ Pengujian berikutnya:
 - Paket: `deploy/ARESTERdev-hostddns-python311-deps.zip`.
 - Paket tidak berisi `.env`, BOT_TOKEN, atau OWNER_ID.
 - Instalasi di HostDDNS akan menggunakan wheelhouse lokal tanpa akses PyPI.
+
+## 2026-10-08 — HostDDNS Passenger Event Loop Fix
+
+- `main.py` diperbaiki agar membuat event loop khusus untuk background thread Passenger.
+- `passenger_wsgi.py` diperbaiki untuk menjalankan bot melalui background thread dengan logging exception.
+- Tujuan: mengatasi `RuntimeError: There is no current event loop in thread`.
+- Target runtime: HostDDNS Python 3.11.9.
+- Deployment package diperbarui: `deploy/ARESTERdev-bot-hostddns.zip`.
+- Package tidak berisi `.env`, BOT_TOKEN, OWNER_ID, `__pycache__`, atau `.pyc`.
+- Deployment ulang ke HostDDNS masih menunggu.
