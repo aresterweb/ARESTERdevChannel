@@ -274,3 +274,29 @@ BUDGET: Rp0 / free-first
 5. Setiap perubahan berikutnya wajib memperbarui handover.md.
 
 # END OF HANDOVER
+
+## STAGE 3.1 — BOT CONNECTION TEST
+
+Status: PERBAIKAN TIMEOUT DITERAPKAN
+
+Hasil diagnosis:
+- Token BotFather valid.
+- Telegram Bot API berhasil diakses dari Termux.
+- Endpoint `getMe` mengembalikan `ok: true`.
+- Kegagalan awal berasal dari `ReadTimeout` pada koneksi `python-telegram-bot`, bukan token invalid.
+
+Perbaikan:
+- Timeout koneksi/read/write/pool dinaikkan menjadi 30 detik.
+- Bootstrap polling menggunakan retry tanpa batas.
+- `bot/main.py` berhasil melewati `py_compile`.
+
+Catatan:
+- Termux saat pengujian menggunakan Python 3.14.6.
+- Target deployment HostDDNS tetap Python 3.11.9.
+- Token tetap disimpan hanya di `bot/.env`.
+
+Tes berikutnya:
+- Jalankan bot kembali.
+- Verifikasi `/start` dari Telegram.
+- Jika berhasil, Stage 3.1 dinyatakan selesai.
+
