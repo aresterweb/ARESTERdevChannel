@@ -354,3 +354,12 @@ Pengujian berikutnya:
 - Uji `/admin` sebagai owner.
 - Uji akses dari akun Telegram lain bila tersedia.
 - Setelah lolos, commit dan push.
+
+
+## 2026-10-08 — HostDDNS Offline Python 3.11 Dependency Package
+
+- HostDDNS Python 3.11.9 tidak dapat mengakses PyPI (`Network is unreachable`).
+- Disiapkan paket dependency offline untuk Python 3.11.9 Linux x86_64.
+- Paket: `deploy/ARESTERdev-hostddns-python311-deps.zip`.
+- Paket tidak berisi `.env`, BOT_TOKEN, atau OWNER_ID.
+- Instalasi di HostDDNS akan menggunakan wheelhouse lokal tanpa akses PyPI.

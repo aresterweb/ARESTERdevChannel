@@ -1,0 +1,16 @@
+ARESTERdev - HostDDNS Python 3.11.9 Offline Dependencies
+
+Target:
+- Python 3.11.9
+- Linux x86_64
+- HostDDNS / cPanel Python App
+
+Isi folder wheelhouse adalah dependency yang sudah diunduh
+untuk Python 3.11 dan dapat dipasang tanpa mengakses PyPI.
+
+Perintah instalasi di server:
+
+python -m pip install --no-index --find-links=wheelhouse -r requirements.txt
+
+Jangan upload atau memasukkan file .env ke paket ini.
+BOT_TOKEN dan OWNER_ID tetap menggunakan Environment Variables HostDDNS.
