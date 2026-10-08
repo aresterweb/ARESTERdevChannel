@@ -373,3 +373,18 @@ Pengujian berikutnya:
 - Deployment package diperbarui: `deploy/ARESTERdev-bot-hostddns.zip`.
 - Package tidak berisi `.env`, BOT_TOKEN, OWNER_ID, `__pycache__`, atau `.pyc`.
 - Deployment ulang ke HostDDNS masih menunggu.
+
+## 2026-10-08 — HostDDNS Passenger Polling Fix
+
+- Ditemukan bahwa `Application.run_polling()` tidak kompatibel ketika dipanggil dari background thread Passenger karena mencoba memasang OS signal handler.
+- Error yang ditemukan:
+  `RuntimeError: set_wakeup_fd only works in main thread of the main interpreter`
+- `main.py` diubah untuk menggunakan lifecycle async manual:
+  `initialize()` → `start()` → `updater.start_polling()`.
+- Event loop dijalankan melalui `asyncio.run()` pada background thread.
+- `python-dotenv` dihapus dari deployment karena konfigurasi production menggunakan HostDDNS Environment Variables.
+- `requirements.txt` sekarang hanya membutuhkan `python-telegram-bot>=21,<23`.
+- Deployment package diperbarui:
+  `deploy/ARESTERdev-bot-hostddns.zip`
+- Tidak ada `.env`, BOT_TOKEN, atau OWNER_ID di dalam package.
+- Deployment ulang ke HostDDNS masih menunggu.

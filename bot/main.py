@@ -1,27 +1,29 @@
 import os
-import logging
 import asyncio
+import logging
 
-from dotenv import load_dotenv
 from telegram import Update
 from telegram.ext import Application, CommandHandler, ContextTypes
 from telegram.request import HTTPXRequest
 
-load_dotenv()
 
 BOT_TOKEN = os.getenv("BOT_TOKEN")
 OWNER_ID_RAW = os.getenv("OWNER_ID")
 
+
 if not BOT_TOKEN:
-    raise RuntimeError("BOT_TOKEN belum diatur di environment/.env")
+    raise RuntimeError("BOT_TOKEN belum diatur di HostDDNS Environment Variables")
+
 
 if not OWNER_ID_RAW:
-    raise RuntimeError("OWNER_ID belum diatur di environment/.env")
+    raise RuntimeError("OWNER_ID belum diatur di HostDDNS Environment Variables")
+
 
 try:
     OWNER_ID = int(OWNER_ID_RAW)
 except ValueError:
     raise RuntimeError("OWNER_ID harus berupa angka Telegram user ID")
+
 
 logging.basicConfig(
     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
@@ -96,21 +98,53 @@ def build_application():
     return app
 
 
-def run_bot():
-    loop = asyncio.new_event_loop()
-    asyncio.set_event_loop(loop)
+async def run_bot_async():
+    app = build_application()
 
     try:
-        logger.info("ARESTERdev Admin Bot starting...")
-        build_application().run_polling(
-            bootstrap_retries=-1,
-            drop_pending_updates=True,
+        logger.info("Initializing ARESTERdev Admin Bot...")
+        await app.initialize()
+
+        logger.info("Starting ARESTERdev Admin Bot...")
+        await app.start()
+
+        if app.updater is None:
+            raise RuntimeError("Telegram updater tidak tersedia")
+
+        logger.info("Starting Telegram polling...")
+        await app.updater.start_polling(
+            drop_pending_updates=True
         )
+
+        logger.info("ARESTERdev Admin Bot is ONLINE.")
+
+        # Menjaga coroutine tetap hidup tanpa menggunakan
+        # run_polling(), sehingga Passenger tidak mengalami
+        # masalah signal handler di background thread.
+        await asyncio.Event().wait()
+
     finally:
+        logger.info("Stopping ARESTERdev Admin Bot...")
+
+        if app.updater is not None:
+            try:
+                await app.updater.stop()
+            except Exception:
+                logger.exception("Error while stopping updater")
+
         try:
-            loop.close()
+            await app.stop()
         except Exception:
-            pass
+            logger.exception("Error while stopping application")
+
+        try:
+            await app.shutdown()
+        except Exception:
+            logger.exception("Error while shutting down application")
+
+
+def run_bot():
+    asyncio.run(run_bot_async())
 
 
 if __name__ == "__main__":
