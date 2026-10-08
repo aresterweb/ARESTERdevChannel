@@ -202,6 +202,38 @@ Telegram:
 
 Jangan mengganti ARESTERdev menjadi ARESTERDev.
 
+## STAGE 3 — TELEGRAM ADMIN BOT
+
+Status: FONDASI DIMULAI
+
+Deployment target:
+- HostDDNS
+- Python utama: 3.11.9
+
+Fondasi yang dibuat:
+- `bot/main.py`
+- `bot/requirements.txt`
+- `bot/.env.example`
+- `bot/.gitignore`
+- `bot/README.md`
+
+Fungsi awal:
+- Memuat konfigurasi dari `.env`
+- Validasi `BOT_TOKEN`
+- Menjalankan Telegram bot dengan polling
+- Handler `/start`
+- Logging dasar
+
+Keamanan:
+- Token bot tidak ditulis langsung di source code
+- `.env` masuk `.gitignore`
+- `.env.example` hanya berisi template
+
+Langkah berikutnya:
+- Uji bot secara lokal di Termux
+- Tambahkan validasi owner/admin
+- Setelah lolos pengujian, siapkan deployment HostDDNS
+
 ## ATURAN GPT BERIKUTNYA
 
 GPT yang melanjutkan project WAJIB membaca handover.md terlebih dahulu.
