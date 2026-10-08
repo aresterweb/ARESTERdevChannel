@@ -1,5 +1,6 @@
 import os
 import logging
+
 from dotenv import load_dotenv
 from telegram import Update
 from telegram.ext import Application, CommandHandler, ContextTypes
@@ -8,9 +9,18 @@ from telegram.request import HTTPXRequest
 load_dotenv()
 
 BOT_TOKEN = os.getenv("BOT_TOKEN")
+OWNER_ID_RAW = os.getenv("OWNER_ID")
 
 if not BOT_TOKEN:
-    raise RuntimeError("BOT_TOKEN belum diatur di file .env")
+    raise RuntimeError("BOT_TOKEN belum diatur di environment/.env")
+
+if not OWNER_ID_RAW:
+    raise RuntimeError("OWNER_ID belum diatur di environment/.env")
+
+try:
+    OWNER_ID = int(OWNER_ID_RAW)
+except ValueError:
+    raise RuntimeError("OWNER_ID harus berupa angka Telegram user ID")
 
 logging.basicConfig(
     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
@@ -20,14 +30,49 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 
+def is_owner(update: Update) -> bool:
+    user = update.effective_user
+
+    if not user:
+        return False
+
+    return user.id == OWNER_ID
+
+
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user = update.effective_user
 
+    if not user:
+        return
+
+    if not is_owner(update):
+        await update.message.reply_text(
+            "⛔ Akses ditolak.\n"
+            "Bot ini hanya dapat digunakan oleh owner."
+        )
+        return
+
     await update.message.reply_text(
-        f"👋 Halo {user.first_name or 'Admin'}!\n\n"
+        f"👋 Halo {user.first_name or 'Owner'}!\n\n"
         "🤖 ARESTERdev Admin Bot\n"
-        "Status: 🟢 Online\n\n"
+        "Status: 🟢 Online\n"
+        "Role: 👑 Owner\n\n"
         "Panel admin akan dikembangkan bertahap."
+    )
+
+
+async def admin(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    if not is_owner(update):
+        await update.message.reply_text(
+            "⛔ Akses ditolak."
+        )
+        return
+
+    await update.message.reply_text(
+        "👑 ARESTERdev Admin Panel\n\n"
+        "Status: 🟢 Online\n"
+        "Role: Owner\n\n"
+        "Fitur admin akan ditambahkan bertahap."
     )
 
 
@@ -48,6 +93,7 @@ def main():
     )
 
     app.add_handler(CommandHandler("start", start))
+    app.add_handler(CommandHandler("admin", admin))
 
     logger.info("ARESTERdev Admin Bot starting...")
     app.run_polling(bootstrap_retries=-1)

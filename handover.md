@@ -76,7 +76,7 @@ Status: SELESAI
 - [x] Integrasi channel dengan rencana ekosistem
 
 ### Stage 3 — Telegram Admin Bot
-Status: BELUM DIMULAI
+Status: SEDANG DIKERJAKAN
 Deployment: HostDDNS
 
 ### Stage 4 — Public Website
@@ -204,7 +204,7 @@ Jangan mengganti ARESTERdev menjadi ARESTERDev.
 
 ## STAGE 3 — TELEGRAM ADMIN BOT
 
-Status: FONDASI DIMULAI
+Status: SEDANG DIKERJAKAN
 
 Deployment target:
 - HostDDNS
@@ -255,7 +255,7 @@ Jika membuat perubahan:
 ## CURRENT STATUS
 
 PROJECT: ARESTERdev
-STAGE: Stage 1 — Foundation
+STAGE: Stage 3 — Telegram Admin Bot
 LOCAL: ~/ARESTERdevChannel
 BRANCH: main
 INITIAL COMMIT: 4ad88bb
@@ -277,7 +277,7 @@ BUDGET: Rp0 / free-first
 
 ## STAGE 3.1 — BOT CONNECTION TEST
 
-Status: PERBAIKAN TIMEOUT DITERAPKAN
+Status: SELESAI
 
 Hasil diagnosis:
 - Token BotFather valid.
@@ -297,6 +297,60 @@ Catatan:
 
 Tes berikutnya:
 - Jalankan bot kembali.
-- Verifikasi `/start` dari Telegram.
-- Jika berhasil, Stage 3.1 dinyatakan selesai.
+- `/start` berhasil diverifikasi melalui Telegram.
+- Stage 3.1 dinyatakan selesai.
 
+
+## STAGE 3.2 — HOSTDDNS PASSENGER FOUNDATION
+
+Status: FONDASI SELESAI
+
+HostDDNS Python App:
+- Python version: 3.11.9
+- Application root: `aresterdevbot`
+- Application URL: `aresterbot.mikhmon.app`
+- Startup file: `passenger_wsgi.py`
+- Entry point: `application`
+- Passenger log: `/home/aresterapp/aresterdevbot/passenger.log`
+
+Passenger:
+- `bot/passenger_wsgi.py` dibuat sebagai entry point Passenger.
+- Syntax `main.py` dan `passenger_wsgi.py` berhasil diverifikasi dengan `py_compile`.
+- Bot dijalankan dari Passenger melalui background thread.
+- `.env` tetap lokal dan tidak dimasukkan ke Git.
+
+Status deployment:
+- Python App HostDDNS sudah dibuat.
+- File aplikasi belum di-upload/dipasang ke HostDDNS.
+- `requirements.txt` belum di-install pada environment HostDDNS.
+- `.env` HostDDNS belum dibuat.
+
+Langkah berikutnya:
+1. Commit dan push fondasi Passenger.
+2. Siapkan file deployment dari repository.
+3. Upload file melalui File Manager HostDDNS.
+4. Install `requirements.txt` menggunakan Python 3.11.9.
+5. Buat `.env` di HostDDNS tanpa membagikan token ke chat.
+6. Restart Passenger.
+7. Periksa `passenger.log`.
+8. Verifikasi `/start` dari Telegram.
+
+## STAGE 3.3 — OWNER AUTHENTICATION
+
+Status: IMPLEMENTASI
+
+Perubahan:
+- `OWNER_ID` digunakan sebagai environment variable.
+- Bot memvalidasi Telegram user ID sebelum memberikan akses admin.
+- `/start` membedakan owner dan pengguna lain.
+- `/admin` hanya dapat digunakan oleh owner.
+- Unauthorized user mendapatkan pesan `Akses ditolak`.
+- `bot/.env.example` menyediakan template `BOT_TOKEN` dan `OWNER_ID`.
+
+Pengujian berikutnya:
+- Isi `OWNER_ID` pada `.env` lokal.
+- Jalankan bot di Termux.
+- Uji `/start` sebagai owner.
+- Uji `/admin` sebagai owner.
+- Uji akses dari akun Telegram lain bila tersedia.
+- Setelah lolos, commit dan push.
