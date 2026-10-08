@@ -10,14 +10,12 @@ if BASE_DIR not in sys.path:
 
 os.chdir(BASE_DIR)
 
-
 logging.basicConfig(
     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
     level=logging.INFO,
 )
 
 logger = logging.getLogger("ARESTERdev.Passenger")
-
 
 _bot_started = False
 _bot_lock = threading.Lock()
@@ -29,11 +27,16 @@ def _start_bot():
     try:
         from main import run_bot
 
-        logger.info("Starting ARESTERdev Admin Bot background thread...")
+        logger.info(
+            "Starting ARESTERdev Admin Bot background thread..."
+        )
+
         run_bot()
 
     except Exception:
-        logger.exception("ARESTERdev Admin Bot crashed.")
+        logger.exception(
+            "ARESTERdev Admin Bot crashed."
+        )
 
     finally:
         _bot_started = False
@@ -54,15 +57,23 @@ def application(environ, start_response):
 
             thread.start()
 
-            logger.info("ARESTERdev background thread started.")
+            logger.info(
+                "ARESTERdev background thread started."
+            )
 
     body = b"ARESTERdev Admin Bot is running."
 
     start_response(
         "200 OK",
         [
-            ("Content-Type", "text/plain; charset=utf-8"),
-            ("Content-Length", str(len(body))),
+            (
+                "Content-Type",
+                "text/plain; charset=utf-8",
+            ),
+            (
+                "Content-Length",
+                str(len(body)),
+            ),
         ],
     )
 

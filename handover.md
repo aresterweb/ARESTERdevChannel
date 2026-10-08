@@ -407,3 +407,26 @@ Panel admin dasar telah ditambahkan ke Admin Bot:
 
 **Catatan deployment:** setelah perubahan source, package deployment HostDDNS perlu diperbarui dan Passenger direstart/reload sebelum pengujian Telegram.
 
+### Stage 3.3 — Panel Admin Dasar — Deployment Repair
+Status: SELESAI DI SUMBER / MENUNGGU VERIFIKASI HOSTDDNS
+
+Perbaikan dilakukan dari Termux pada source bot:
+- menambahkan import `ContextTypes`;
+- mendaftarkan `CallbackQueryHandler`;
+- menyamakan handler `/admin` dengan panel inline;
+- menambahkan tombol kembali;
+- mempertahankan owner-only authorization;
+- mempertahankan async polling tanpa `Application.run_polling()`;
+- membersihkan artefak `__pycache__`, `passenger.log`, dan `tmp/` dari paket deployment;
+- membuat ulang deployment ZIP;
+- secrets `BOT_TOKEN` dan `OWNER_ID` tetap hanya di HostDDNS Environment Variables.
+
+Verifikasi HostDDNS berikutnya:
+1. upload `deploy/ARESTERdev-bot-hostddns.zip`;
+2. extract/replace application files;
+3. restart Passenger;
+4. kirim `/start`;
+5. kirim `/admin`;
+6. tekan seluruh tombol panel untuk memastikan callback bekerja.
+
+Jangan memasukkan BOT_TOKEN atau OWNER_ID ke repository/ZIP.

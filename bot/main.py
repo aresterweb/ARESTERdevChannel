@@ -3,21 +3,23 @@ import asyncio
 import logging
 
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup, Update
-from telegram.ext import Application, CommandHandler, CallbackQueryHandler
+from telegram.ext import (
+    Application,
+    CommandHandler,
+    CallbackQueryHandler,
+    ContextTypes,
+)
 from telegram.request import HTTPXRequest
 
 
 BOT_TOKEN = os.getenv("BOT_TOKEN")
 OWNER_ID_RAW = os.getenv("OWNER_ID")
 
-
 if not BOT_TOKEN:
     raise RuntimeError("BOT_TOKEN belum diatur di HostDDNS Environment Variables")
 
-
 if not OWNER_ID_RAW:
     raise RuntimeError("OWNER_ID belum diatur di HostDDNS Environment Variables")
-
 
 try:
     OWNER_ID = int(OWNER_ID_RAW)
@@ -56,11 +58,11 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
         "🤖 ARESTERdev Admin Bot\n"
         "Status: 🟢 Online\n"
         "Role: 👑 Owner\n\n"
-        "Panel admin akan dikembangkan bertahap."
+        "Gunakan /admin untuk membuka panel admin."
     )
 
 
-async def admin(update: Update, context: ContextTypes.DEFAULT_TYPE):
+async def admin_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if not update.message:
         return
 
@@ -68,37 +70,36 @@ async def admin(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await update.message.reply_text("⛔ Akses ditolak.")
         return
 
-    await update.message.reply_text(
-        "👑 ARESTERdev Admin Panel\n\n"
-        "Status: 🟢 Online\n"
-        "Role: Owner\n\n"
-        "Fitur admin akan ditambahkan bertahap."
-    )
-
-
-async def admin_command(update: Update, context) -> None:
-    """Owner-only admin panel."""
-    user = update.effective_user
-
-    if user is None or user.id != OWNER_ID:
-        await update.message.reply_text(
-            "⛔ Akses ditolak.\n\n"
-            "Panel admin hanya dapat digunakan oleh Owner."
-        )
-        return
-
     keyboard = [
         [
-            InlineKeyboardButton("📊 Dashboard", callback_data="admin_dashboard"),
-            InlineKeyboardButton("🤖 Bot Manager", callback_data="admin_bots"),
+            InlineKeyboardButton(
+                "📊 Dashboard",
+                callback_data="admin_dashboard",
+            ),
+            InlineKeyboardButton(
+                "🤖 Bot Manager",
+                callback_data="admin_bots",
+            ),
         ],
         [
-            InlineKeyboardButton("🌐 Website", callback_data="admin_website"),
-            InlineKeyboardButton("📢 Channel", callback_data="admin_channel"),
+            InlineKeyboardButton(
+                "🌐 Website",
+                callback_data="admin_website",
+            ),
+            InlineKeyboardButton(
+                "📢 Channel",
+                callback_data="admin_channel",
+            ),
         ],
         [
-            InlineKeyboardButton("🛠️ Tools", callback_data="admin_tools"),
-            InlineKeyboardButton("⚙️ Settings", callback_data="admin_settings"),
+            InlineKeyboardButton(
+                "🛠️ Tools",
+                callback_data="admin_tools",
+            ),
+            InlineKeyboardButton(
+                "⚙️ Settings",
+                callback_data="admin_settings",
+            ),
         ],
     ]
 
@@ -111,15 +112,19 @@ async def admin_command(update: Update, context) -> None:
     )
 
 
-async def admin_callback(update: Update, context) -> None:
-    """Handle basic admin panel buttons."""
+async def admin_callback(
+    update: Update,
+    context: ContextTypes.DEFAULT_TYPE,
+):
     query = update.callback_query
+
     if query is None:
         return
 
     await query.answer()
 
     user = query.from_user
+
     if user is None or user.id != OWNER_ID:
         await query.edit_message_text(
             "⛔ Akses ditolak.\n\n"
@@ -138,10 +143,64 @@ async def admin_callback(update: Update, context) -> None:
 
     selected = labels.get(query.data, "Menu")
 
+    keyboard = [
+        [
+            InlineKeyboardButton(
+                "⬅️ Kembali",
+                callback_data="admin_back",
+            )
+        ]
+    ]
+
+    if query.data == "admin_back":
+        keyboard = [
+            [
+                InlineKeyboardButton(
+                    "📊 Dashboard",
+                    callback_data="admin_dashboard",
+                ),
+                InlineKeyboardButton(
+                    "🤖 Bot Manager",
+                    callback_data="admin_bots",
+                ),
+            ],
+            [
+                InlineKeyboardButton(
+                    "🌐 Website",
+                    callback_data="admin_website",
+                ),
+                InlineKeyboardButton(
+                    "📢 Channel",
+                    callback_data="admin_channel",
+                ),
+            ],
+            [
+                InlineKeyboardButton(
+                    "🛠️ Tools",
+                    callback_data="admin_tools",
+                ),
+                InlineKeyboardButton(
+                    "⚙️ Settings",
+                    callback_data="admin_settings",
+                ),
+            ],
+        ]
+
+        await query.edit_message_text(
+            "👑 <b>ARESTERdev Admin Panel</b>\n\n"
+            "Selamat datang, Owner.\n"
+            "Pilih menu yang ingin dikelola:",
+            reply_markup=InlineKeyboardMarkup(keyboard),
+            parse_mode="HTML",
+        )
+        return
+
     await query.edit_message_text(
         f"👑 <b>{selected}</b>\n\n"
-        "🚧 Fitur ini akan dikembangkan bertahap.\n\n"
-        "Gunakan /admin untuk kembali ke panel utama.",
+        "🚧 Fitur ini sedang disiapkan dan akan dikembangkan "
+        "bertahap.\n\n"
+        "Tekan tombol di bawah untuk kembali.",
+        reply_markup=InlineKeyboardMarkup(keyboard),
         parse_mode="HTML",
     )
 
@@ -163,7 +222,10 @@ def build_application():
     )
 
     app.add_handler(CommandHandler("start", start))
-    app.add_handler(CommandHandler("admin", admin))
+    app.add_handler(CommandHandler("admin", admin_command))
+    app.add_handler(
+        CallbackQueryHandler(admin_callback)
+    )
 
     return app
 
@@ -182,15 +244,13 @@ async def run_bot_async():
             raise RuntimeError("Telegram updater tidak tersedia")
 
         logger.info("Starting Telegram polling...")
+
         await app.updater.start_polling(
             drop_pending_updates=True
         )
 
         logger.info("ARESTERdev Admin Bot is ONLINE.")
 
-        # Menjaga coroutine tetap hidup tanpa menggunakan
-        # run_polling(), sehingga Passenger tidak mengalami
-        # masalah signal handler di background thread.
         await asyncio.Event().wait()
 
     finally:
@@ -200,17 +260,23 @@ async def run_bot_async():
             try:
                 await app.updater.stop()
             except Exception:
-                logger.exception("Error while stopping updater")
+                logger.exception(
+                    "Error while stopping updater"
+                )
 
         try:
             await app.stop()
         except Exception:
-            logger.exception("Error while stopping application")
+            logger.exception(
+                "Error while stopping application"
+            )
 
         try:
             await app.shutdown()
         except Exception:
-            logger.exception("Error while shutting down application")
+            logger.exception(
+                "Error while shutting down application"
+            )
 
 
 def run_bot():

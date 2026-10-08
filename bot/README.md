@@ -1,47 +1,68 @@
 # ARESTERdev Admin Bot
 
-Telegram admin bot untuk ekosistem ARESTERdev.
+Telegram admin bot for the ARESTERdev ecosystem.
 
 ## Runtime
 
-Target:
+Target runtime:
+
+- HostDDNS
 - Python 3.11.9
-- HostDDNS / Passenger
-
-Startup:
-- passenger_wsgi.py
-
-Entry point:
-- application
+- Passenger / WSGI
+- `passenger_wsgi.py`
+- Telegram polling in a background thread
 
 ## Environment Variables
 
-Wajib disediakan melalui HostDDNS Environment Variables:
+Set these in HostDDNS Environment Variables:
 
-BOT_TOKEN
-OWNER_ID
+- `BOT_TOKEN`
+- `OWNER_ID`
 
-Tidak menggunakan file .env pada deployment.
+Do not put either value in GitHub, ZIP files, source code, or `.env`.
 
-## Commands
+## Important architecture
 
-/start
-/admin
+The bot does not use `Application.run_polling()`.
 
-## Passenger Compatibility
+Passenger runs the WSGI application in its own environment/thread, so the bot manually controls:
 
-Bot tidak menggunakan Application.run_polling() karena Passenger
-menjalankan WSGI application dan bot pada background thread.
+1. `initialize()`
+2. `start()`
+3. `updater.start_polling()`
+4. async wait
+5. `updater.stop()`
+6. `stop()`
+7. `shutdown()`
 
-Telegram polling dijalankan secara manual:
+This avoids the `set_wakeup_fd only works in main thread` problem.
 
-initialize()
-start()
-updater.start_polling()
+## Deployment
 
-Kemudian event loop dijaga tetap hidup dengan asyncio.Event().
+Upload the generated:
 
-Hal ini menghindari error:
+`deploy/ARESTERdev-bot-hostddns.zip`
 
-RuntimeError:
-set_wakeup_fd only works in main thread of the main interpreter
+to HostDDNS and extract it into the Python application root.
+
+The deployment package contains the bot source and offline wheelhouse when available.
+
+Do not upload secrets.
+
+## Admin panel
+
+Current commands:
+
+- `/start`
+- `/admin`
+
+Current owner-only panel buttons:
+
+- Dashboard
+- Bot Manager
+- Website
+- Channel
+- Tools
+- Settings
+
+The individual modules are placeholders and will be developed stage-by-stage.
