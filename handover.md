@@ -430,3 +430,97 @@ Verifikasi HostDDNS berikutnya:
 6. tekan seluruh tombol panel untuk memastikan callback bekerja.
 
 Jangan memasukkan BOT_TOKEN atau OWNER_ID ke repository/ZIP.
+
+### PAUSE / HANDOVER — 2026-10-08
+Status: DITUNDA, LANJUT BESOK
+
+#### Posisi terakhir
+Pekerjaan ARESTERdev Admin Bot sedang pada tahap finalisasi deployment HostDDNS.
+
+#### Yang sudah diperbaiki di source
+- `bot/main.py` sudah diperbaiki.
+- `ContextTypes` sudah di-import.
+- `CallbackQueryHandler` sudah didaftarkan.
+- `/start` dan `/admin` menggunakan owner authentication.
+- Admin panel inline tersedia:
+  - Dashboard
+  - Bot Manager
+  - Website
+  - Channel
+  - Tools
+  - Settings
+- Polling menggunakan async lifecycle:
+  - `initialize()`
+  - `start()`
+  - `updater.start_polling()`
+  - `updater.stop()`
+  - `stop()`
+  - `shutdown()`
+- `Application.run_polling()` tidak boleh digunakan karena sebelumnya menyebabkan:
+  `set_wakeup_fd only works in main thread of the main interpreter`
+- `passenger_wsgi.py` menjalankan bot melalui background thread.
+- `BOT_TOKEN` dan `OWNER_ID` tetap hanya di HostDDNS Environment Variables.
+
+#### Dependency
+HostDDNS sebelumnya sudah memiliki `python-telegram-bot 22.8` di virtualenv.
+ZIP yang diambil dari HostDDNS juga memiliki wheelhouse offline dengan dependency Telegram yang diperlukan.
+
+#### Error terakhir yang sudah diketahui
+Error lama:
+`NameError: name 'ContextTypes' is not defined`
+
+Error tersebut sudah diperbaiki di source Termux.
+
+#### Hal yang BELUM dinyatakan selesai
+Deployment HostDDNS belum diverifikasi final.
+
+ZIP yang terakhir diambil dari HostDDNS masih berisi artefak runtime seperti:
+- `__pycache__`
+- `passenger.log`
+- `tmp/restart.txt`
+
+Besok JANGAN langsung menganggap ZIP tersebut sebagai paket final.
+
+#### Tugas BESOK — lakukan dari Termux
+1. Periksa source terbaru di `~/ARESTERdevChannel`.
+2. Buat ulang deployment ZIP yang benar-benar bersih.
+3. Pastikan struktur ZIP cocok untuk File Manager HostDDNS sehingga tidak menghasilkan:
+   `aresterdevbot/aresterdevbot/main.py`
+4. Pastikan:
+   - `main.py`
+   - `passenger_wsgi.py`
+   - `requirements.txt`
+   - `README.md`
+   berada pada level deployment yang benar.
+5. Sertakan `wheelhouse` bila diperlukan untuk offline dependency installation.
+6. Jangan memasukkan:
+   - BOT_TOKEN
+   - OWNER_ID
+   - `.env`
+   - `passenger.log`
+   - `__pycache__`
+   - `.pyc`
+   - `tmp/restart.txt`
+7. Jalankan syntax check.
+8. Periksa isi ZIP sebelum upload.
+9. Commit dan push perubahan ke GitHub.
+10. Setelah ZIP final siap, berikan link download.
+11. Upload melalui File Manager HostDDNS.
+12. Pastikan Environment Variables tetap:
+   - `BOT_TOKEN`
+   - `OWNER_ID`
+13. Baru lakukan instalasi dependency bila diperlukan.
+14. Restart Passenger.
+15. Periksa `passenger.log`.
+16. Tes Telegram:
+   - `/start`
+   - `/admin`
+   - semua tombol callback panel.
+
+#### Catatan penting
+Jangan meminta atau menuliskan BOT_TOKEN/OWNER_ID di chat.
+Jangan mengganti token dengan token contoh.
+Jangan menganggap `Run pip install` wajib jika dependency dapat dipasang offline dari wheelhouse.
+
+Tujuan besok:
+**1 ZIP final → upload File Manager → dependency/install yang diperlukan → Restart Passenger → bot langsung online → verifikasi `/start` dan `/admin`.**
