@@ -2,8 +2,8 @@ import os
 import asyncio
 import logging
 
-from telegram import Update
-from telegram.ext import Application, CommandHandler, ContextTypes
+from telegram import InlineKeyboardButton, InlineKeyboardMarkup, Update
+from telegram.ext import Application, CommandHandler, CallbackQueryHandler
 from telegram.request import HTTPXRequest
 
 
@@ -73,6 +73,76 @@ async def admin(update: Update, context: ContextTypes.DEFAULT_TYPE):
         "Status: 🟢 Online\n"
         "Role: Owner\n\n"
         "Fitur admin akan ditambahkan bertahap."
+    )
+
+
+async def admin_command(update: Update, context) -> None:
+    """Owner-only admin panel."""
+    user = update.effective_user
+
+    if user is None or user.id != OWNER_ID:
+        await update.message.reply_text(
+            "⛔ Akses ditolak.\n\n"
+            "Panel admin hanya dapat digunakan oleh Owner."
+        )
+        return
+
+    keyboard = [
+        [
+            InlineKeyboardButton("📊 Dashboard", callback_data="admin_dashboard"),
+            InlineKeyboardButton("🤖 Bot Manager", callback_data="admin_bots"),
+        ],
+        [
+            InlineKeyboardButton("🌐 Website", callback_data="admin_website"),
+            InlineKeyboardButton("📢 Channel", callback_data="admin_channel"),
+        ],
+        [
+            InlineKeyboardButton("🛠️ Tools", callback_data="admin_tools"),
+            InlineKeyboardButton("⚙️ Settings", callback_data="admin_settings"),
+        ],
+    ]
+
+    await update.message.reply_text(
+        "👑 <b>ARESTERdev Admin Panel</b>\n\n"
+        "Selamat datang, Owner.\n"
+        "Pilih menu yang ingin dikelola:",
+        reply_markup=InlineKeyboardMarkup(keyboard),
+        parse_mode="HTML",
+    )
+
+
+async def admin_callback(update: Update, context) -> None:
+    """Handle basic admin panel buttons."""
+    query = update.callback_query
+    if query is None:
+        return
+
+    await query.answer()
+
+    user = query.from_user
+    if user is None or user.id != OWNER_ID:
+        await query.edit_message_text(
+            "⛔ Akses ditolak.\n\n"
+            "Panel admin hanya dapat digunakan oleh Owner."
+        )
+        return
+
+    labels = {
+        "admin_dashboard": "📊 Dashboard",
+        "admin_bots": "🤖 Bot Manager",
+        "admin_website": "🌐 Website",
+        "admin_channel": "📢 Channel",
+        "admin_tools": "🛠️ Tools",
+        "admin_settings": "⚙️ Settings",
+    }
+
+    selected = labels.get(query.data, "Menu")
+
+    await query.edit_message_text(
+        f"👑 <b>{selected}</b>\n\n"
+        "🚧 Fitur ini akan dikembangkan bertahap.\n\n"
+        "Gunakan /admin untuk kembali ke panel utama.",
+        parse_mode="HTML",
     )
 
 

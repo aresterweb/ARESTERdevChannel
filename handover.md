@@ -388,3 +388,22 @@ Pengujian berikutnya:
   `deploy/ARESTERdev-bot-hostddns.zip`
 - Tidak ada `.env`, BOT_TOKEN, atau OWNER_ID di dalam package.
 - Deployment ulang ke HostDDNS masih menunggu.
+
+### Stage 3.3 — Panel Admin Dasar
+**Status: SELESAI — IMPLEMENTASI**
+
+Panel admin dasar telah ditambahkan ke Admin Bot:
+- `/admin` hanya dapat digunakan oleh Owner.
+- Menu inline:
+  - 📊 Dashboard
+  - 🤖 Bot Manager
+  - 🌐 Website
+  - 📢 Channel
+  - 🛠️ Tools
+  - ⚙️ Settings
+- Callback menu memiliki placeholder pengembangan bertahap.
+- Non-owner mendapat pesan akses ditolak.
+- Syntax Python telah diverifikasi dengan `py_compile`.
+
+**Catatan deployment:** setelah perubahan source, package deployment HostDDNS perlu diperbarui dan Passenger direstart/reload sebelum pengujian Telegram.
+
